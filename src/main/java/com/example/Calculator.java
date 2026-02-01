@@ -2,57 +2,51 @@ package main.java.com.example;
 
 public class Calculator {
 
-    // EVEN WORSE: longer, more complex, duplicated logic
-    public int calculate(int a, int b, String op) {
-
-        if (op.equals("add")) {
-            return a + b;
-
-        } else if (op.equals("add-again")) {
-            return a + b; // DUPLICATION
-
-        } else if (op.equals("sub")) {
-            return a - b;
-
-        } else if (op.equals("sub-again")) {
-            return a - b; // DUPLICATION
-
-        } else if (op.equals("mul")) {
-            return a * b;
-
-        } else if (op.equals("div")) {
-            if (b == 0) {
-                return 0;
-            } else {
+    public enum Operation {
+        ADD {
+            @Override
+            public int apply(int a, int b) {
+                return a + b;
+            }
+        },
+        SUBTRACT {
+            @Override
+            public int apply(int a, int b) {
+                return a - b;
+            }
+        },
+        MULTIPLY {
+            @Override
+            public int apply(int a, int b) {
+                return a * b;
+            }
+        },
+        DIVIDE {
+            @Override
+            public int apply(int a, int b) {
+                if (b == 0) {
+                    throw new ArithmeticException("Division by zero is not allowed");
+                }
                 return a / b;
             }
-
-        } else if (op.equals("mod")) {
-            return a % b;
-
-        } else if (op.equals("pow")) {
-            int result = 1;
-            for (int i = 0; i < b; i++) {
-                result = result * a;
+        },
+        MODULO {
+            @Override
+            public int apply(int a, int b) {
+                return a % b;
             }
-            return result;
+        },
+        POWER {
+            @Override
+            public int apply(int a, int b) {
+                return (int) Math.pow(a, b);
+            }
+        };
 
-        } else {
-            return 0;
-        }
+        public abstract int apply(int a, int b);
     }
 
-    // Code Duplication (students must remove)
-    public int addNumbers(int x, int y) {
-        return x + y;
-    }
-
-    public int sumValues(int a, int b) {
-        return a + b;
-    }
-
-    // INTENTIONAL DUPLICATION
-    public int addAgain(int a, int b) {
-        return a + b;
+    public int calculate(int a, int b, Operation operation) {
+        return operation.apply(a, b);
     }
 }
