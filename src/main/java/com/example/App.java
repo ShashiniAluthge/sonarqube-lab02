@@ -1,5 +1,6 @@
 package main.java.com.example;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class App {
@@ -12,11 +13,11 @@ public class App {
         Calculator calculator = new Calculator();
         int result = calculator.calculate(10, 5, Calculator.Operation.ADD);
 
-        LOGGER.info("Calculation result: " + result);
+        // Use built-in formatting instead of string concatenation
+        LOGGER.log(Level.INFO, "Calculation result: {0}", result);
 
         // UserService with injected password (no hardcoding)
-        UserService service = new UserService(
-                System.getenv("DB_PASSWORD"));
+        UserService service = new UserService(System.getenv("DB_PASSWORD"));
 
         service.findUser("admin");
         service.deleteUser("admin");

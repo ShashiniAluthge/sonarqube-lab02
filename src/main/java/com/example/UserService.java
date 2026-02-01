@@ -5,8 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class UserService {
+
+    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
     private static final String DB_URL = "jdbc:mysql://localhost/db";
     private static final String DB_USER = "root";
@@ -31,14 +34,15 @@ public class UserService {
                 PreparedStatement ps = conn.prepareStatement(query)) {
 
             ps.setString(1, username);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     int id = rs.getInt("id");
                     String name = rs.getString("name");
                     String email = rs.getString("email");
 
-                    // Process user data (example: log it)
-                    System.out.println("User: " + id + ", " + name + ", " + email);
+                    // Log user data instead of printing to console
+                    LOGGER.info(() -> "User: " + id + ", " + name + ", " + email);
                 }
             }
         }
@@ -53,6 +57,7 @@ public class UserService {
 
             ps.setString(1, username);
             ps.executeUpdate();
+            LOGGER.info(() -> "Deleted user with name: " + username);
         }
     }
 }
