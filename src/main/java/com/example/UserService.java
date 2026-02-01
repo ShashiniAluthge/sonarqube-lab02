@@ -3,6 +3,7 @@ package main.java.com.example;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserService {
@@ -23,13 +24,23 @@ public class UserService {
 
     public void findUser(String username) throws SQLException {
 
-        String query = "SELECT * FROM users WHERE name = ?";
+        // Explicitly select only the needed columns
+        String query = "SELECT id, name, email FROM users WHERE name = ?";
 
         try (Connection conn = getConnection();
                 PreparedStatement ps = conn.prepareStatement(query)) {
 
             ps.setString(1, username);
-            ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("name");
+                    String email = rs.getString("email");
+
+                    // Process user data (example: log it)
+                    System.out.println("User: " + id + ", " + name + ", " + email);
+                }
+            }
         }
     }
 
